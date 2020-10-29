@@ -25,6 +25,29 @@
     --data-raw ''
     ```
 
+8. GET a person REQUEST
+    ```
+    curl --location --request GET 'http://127.0.0.1:5000/person/1' \
+    --header 'Content-Type: application/json' \
+    --data-raw ''
+    ```
+9. UPDATE a person REQUEST
+    ```
+    curl --location --request PUT 'http://127.0.0.1:5000/person/1' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "name": "FTop",
+        "age": "3"
+    }'
+    ```
+
+10. DELETE a person REQUEST
+    ```
+    curl --location --request DELETE 'http://127.0.0.1:5000/person/1' \
+    --header 'Content-Type: application/json' \
+    --data-raw ''
+    ```
+
 # how to develop from scratch
 1. create directory
 2. cd into that directory
