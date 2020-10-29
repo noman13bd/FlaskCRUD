@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 #postgresql://USER:PASS@HOST:PORT/DB = "postgresql://postgres:postgres@localhost:5405/postgres"
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/postgres"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@db:5432/postgres"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -60,6 +60,30 @@ def persons_op():
             } for person in persons]
 
         return {"count": len(results), "persons": results}
+    
+@app.route("/person/<person_id>", methods=['PUT', 'GET', 'DELETE'])
+def person_op(person_id):
+    person = PersonsModel.query.get_or_404(person_id)
+
+    if request.method == 'GET':
+        response = {
+            "name": person.name,
+            "age": person.age
+        }
+        return {"message": "success", "person": response}
+
+    elif request.method == 'PUT':
+        data = request.get_json()
+        person.name = data['name']
+        person.age = data['age']
+        db.session.add(person)
+        db.session.commit()
+        return {"message": "Person - {} updated.".format(person.name)}
+
+    elif request.method == 'DELETE':
+        db.session.delete(person)
+        db.session.commit()
+        return {"message": "Person - {} deleted.".format(person.name)}
 
 if __name__ == "__main__":    
     manager.run()
